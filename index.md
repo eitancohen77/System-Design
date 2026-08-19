@@ -9,6 +9,7 @@ Notes and working code covering core distributed systems concepts, plus case stu
 on how real systems (Kafka, Redis, etc.) apply — or break — these trade-offs.
 
 ## Fundamentals
+
 Hands-on demos I built from scratch to prove out each concept.
 
 - [CAP Theorem](fundamentals/cap-theorem.md) — consistency vs. availability during a network partition
@@ -17,6 +18,5 @@ Hands-on demos I built from scratch to prove out each concept.
 - [Replication](fundamentals/replication.md) — single vs. master-slave, full vs. partial replication
 
 ## Case Studies
-Analysis of decisions real systems made, and how they map back to the fundamentals above.
 
-- *(coming soon — Kafka, Redis, and others)*
+Analysis of decisions real systems made, and how they map back to the fundamentals above.
