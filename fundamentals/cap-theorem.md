@@ -7,7 +7,7 @@ title: CAP Theorem
 
 # CAP Theorem — Consistency vs. Availability
 
-**Code:** [https://github.com/eitancohen77/CAP-Theorem](#)
+**Code:** [CAP Theorem Demonstration](https://github.com/eitancohen77/CAP-Theorem)
 
 ## Theory
 
