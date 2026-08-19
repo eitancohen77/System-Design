@@ -5,7 +5,7 @@ title: Consistent Systems
 
 [← Back to all topics](../index.md)
 
-# Consistency — Weak, Eventual and Strong
+# Consistency Patterns— Weak, Eventual and Strong
 
 **Code:** [Consistent System Demonstrations](https://github.com/eitancohen77/Consistent-Systems)
 
