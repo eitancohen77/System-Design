@@ -14,7 +14,7 @@ title: CAP Theorem
 ### CAP THEOREM BY ERIC BREWER
 
 Let's say we have a distributed system. In this example our distributed system is a network of ATM machines. And these machines have a failure between the 2 of them causing them to not be able to communicate and pass information. This is called a Partition - When a network failure happens between 2 components of a distributed system.
-![alt text](/fundamentals/images/ATM-server-partiion.png)
+![alt text](./images/ATM-server-partiion.png)
 
 - If you make write operations to one of the server, the other one would not know the operations happening.
 
