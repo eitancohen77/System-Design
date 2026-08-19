@@ -14,6 +14,7 @@ title: CAP Theorem
 ### CAP THEOREM BY ERIC BREWER
 
 Let's say we have a distributed system. In this example our distributed system is a network of ATM machines. And these machines have a failure between the 2 of them causing them to not be able to communicate and pass information. This is called a Partition - When a network failure happens between 2 components of a distributed system.
+
 ![alt text](./images/ATM-server-partiion.png)
 
 - If you make write operations to one of the server, the other one would not know the operations happening.
@@ -30,7 +31,7 @@ For the example above, consistency would be if the user wants to pull money out 
 
 **Disadvantages**
 
-- user can't access the system because you can’t afford changes to the data with system down. This means there is downtime.
+- User can't access the system because you can’t afford changes to the data with system down. This means there is downtime.
 
 ## Availability Design
 
@@ -38,11 +39,11 @@ Here, the user can make changes with the working ATM, and when the broken ATM ge
 
 **Advantages**
 
-- offers availability. Users can interact with the system and its usable
+- Offers availability. Users can interact with the system and its usable
 
 **Disadvantages**
 
-- can be risky because if a system is down and you are making changes which would result in 2 different nodes/components that aren't communicating with each other so they have differing views on data.
+- Can be risky because if a system is down and you are making changes which would result in 2 different nodes/components that aren't communicating with each other so they have differing views on data.
 
 If data is changed and nodes can't communicate with each other, then one node has different data. To know which data is accurate and which one needs updating, you use a hinted handoff.  
 **Hinted Handoff** - temporarily stores data on a reachable node when the intended node is down, ensuring data is eventually transferred to the correct node once it's back online.
