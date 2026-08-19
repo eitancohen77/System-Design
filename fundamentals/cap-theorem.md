@@ -15,7 +15,7 @@ title: CAP Theorem
 
 Let's say we have a distributed system. In this example our distributed system is a network of ATM machines. And these machines have a failure between the 2 of them causing them to not be able to communicate and pass information. This is called a Partition - When a network failure happens between 2 components of a distributed system.
 
-![alt text](./images/ATM-server-partiion.png)
+![alt text](./images/CAP/ATM-server-partiion.png)
 
 - If you make write operations to one of the server, the other one would not know the operations happening.
 
@@ -63,6 +63,52 @@ ensures consistency by requiring a majority of nodes to agree on an operation be
 
 Now a true Available system would not need a quorum because so long as one node works it doesn't matter. An example of this is [Cassandra consistency level one](https://www.baeldung.com/cassandra-consistency-levels). If you require a quorum for every request, you’ve built a Consistent Partition system, because refusing to serve a minority partition is a consistent behavior.
 
-## Watching it run
+# Coding Demonstration:
+
+### Say I have the following node class that can simply read and write operations:
+
+![alt text](./images/CAP/node_class.png)
+
+### I create 2 network systems. A consistent system and a available system with the same number of nodes holding the same amount of information:
+
+![alt text](./images/CAP/test1.png)
+
+### I create a partition. So now node goup {0, 1} cannot communicate with group {2, 3, 4} on both Consistent and Available systems:
+
+![alt text](./images/CAP/test2.png)
+
+### Write operation on a minority side:
+
+![alt text](./images/CAP/test3.png)
+
+### Read operation on a majority side:
+
+![alt text](./images/CAP/test4.png)
+
+### Partition heals. Communication between group works again
+
+![alt text](./images/CAP/test5.png)
+
+### Final state of both Systems:
+
+![alt text](./images/CAP/test6.png)
 
 ## What this demonstrates
+
+The AP nodes are still divergent (node 0/1 = 250, node 2/3/4 = 100). Healing the network doesn't fix this by itself -- an AP system needs an explicit reconciliation strategy to converge. That reconciliation step is intentionally left out here so the divergence is easy to see.
+
+SUMMARY
+
+CP system : during the partition it REJECTED the write and the read
+request whenever a quorum wasn't reachable. Every answer
+you got from it was guaranteed correct, but sometimes it
+gave you no answer at all.
+
+AP system : during the partition it ACCEPTED every request instantly,
+no matter which node you happened to hit. It was always
+available, but two different nodes could give
+you two different answers to the same question even IFF there is only one node available with the others partitioned
+
+That trade-off -- give up availability to keep consistency, or give
+up consistency to keep availability, whenever a partition happens --
+is exactly what the CAP theorem describes.
