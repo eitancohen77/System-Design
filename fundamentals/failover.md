@@ -67,36 +67,142 @@ In practice users rarely notice when a serve fails. Their requests are unknowing
 
 **Use active-active if you want high availaiblity**
 
-## Watching it run
+## Code Demonstration
 
-Since this is a live multi-node simulation, here's what an actual run looks like
-rather than a live demo:
+### Here I have 4 servers nodes.
+
+![alt text](./images/Failover/setup.png)
+
+**Database** - which is a server that holds data  
+**Server A** - The active server (http://localhost:8001)  
+**Server B** - The standby server (http://localhost:8002)  
+**Client** - A Client that can use read/write operations
+
+### The two server nodes are set up to do read/write operations:
 
 ```
-$ python3 main.py
-[Normal operation] CP cluster: balance=100 across all 5 nodes
-[Normal operation] AP cluster: balance=100 across all 5 nodes
+class Node:
+    def __init__(self, node_id, port, role, inventory_port, primary_port=None, check_interval=5):
+        self.node_id = node_id
+        self.port = port
+        self.role = role
+        self.primary_port = primary_port
+        self.inventory_port = inventory_port
 
-[Partition introduced] nodes {0,1} cut off from {2,3,4}
+    def parsed_for_inventory(self, method, path, data=None):
+        . . . # Not important
 
-[Write balance=250 to node 0, both systems]
-  CP → REJECTED (only 2/5 nodes reachable, quorum=3)
-  AP → ACCEPTED (node 0 updated, replicated to node 1 only)
+    # Write operation to POST in database
+    def write_books(self, book_id, author, stock):
+        result = self.parsed_for_inventory(
+            "POST", "/write", {"book_id": book_id, "author": author, "stock": stock}
+        )
+        return result
 
-[Read from majority node 2]
-  CP → 100 (quorum-confirmed)
-  AP → 100 (node 2's local value — node 0 is silently at 250)
+    # Read operations to GET from database
+    def read_book(self, book_id):
+        result = self.parsed_for_inventory("GET", f"/read?book_id={book_id}")
+        return result
 
-[Partition healed]
+    def read_all_books(self):
+        status, result = self.parsed_for_inventory("GET", "/read_all")
+        return status, result  # return BOTH -- do_GET needs the status too
 
-[Final state]
-  CP cluster: all nodes read 100 (nothing to reconcile)
-  AP cluster: nodes 0,1 read 250 — nodes 2,3,4 read 100 (diverged, unresolved)
+    def is_primary_alive(self):
+        # This attempts to ping the primary node
+        try:
+            request.urlopen(f"http://localhost:{self.primary_port}/ping", timeout=2)
+            return True
+        except error.URLError:
+            return False
+
+```
+
+- **The is_primary_alive()** function is a heartbeat mechanism function that pings the primary node every **check_interval** time. In this case its every 5 seconds
+
+### I make a write operation from Client which is carried out by server A:
+
+```
+> write b14 JRR Tolkien 4
+ (answered by http://localhost:8001)
+```
+
+### I activate server B:
+
+**Server B:**
+
+```
+B Server runnning on http://localhost:8002
+```
+
+**Server A:**
+
+```
+127.0.0.1 - - [19/Aug/2026 19:35:20] "GET /ping HTTP/1.1" 200 -
+127.0.0.1 - - [19/Aug/2026 19:35:27] "GET /ping HTTP/1.1" 200 -
+```
+
+- As we can can see this is the heartbeat mechanism. Server A is getting a GET request from server B for a heartbeat.
+
+### I stop server A from functioning.
+
+**Server A:**
+
+```
+127.0.0.1 - - [19/Aug/2026 19:36:58] "GET /ping HTTP/1.1" 200 -
+127.0.0.1 - - [19/Aug/2026 19:37:05] "GET /ping HTTP/1.1" 200 -
+
+A Shutting down
+```
+
+**Server B:**
+
+```
+[B] Primary node is not responding. TAKING OVER AS ACTIVE!
+```
+
+- Server B does not get a heartbeat back from server A and assumes its dead and takes over.
+
+### Server B plays the same role as server A (because they are both identical)
+
+**Client:**
+
+```
+> read b14
+ (answered by http://localhost:8002)
+{'book_id': 'b14', 'author': 'JRR Tolkien', 'stock': 4}
+```
+
+- The client can still do read/write operations and remembers the information done on server A because its stored in a database even though server 1 failed and crashed.
+
+### Server A comes back to life
+
+**Server A up and running again:**
+
+```
+A Server runnning on http://localhost:8001
+127.0.0.1 - - [19/Aug/2026 19:41:33] "GET /ping HTTP/1.1" 200 -
+```
+
+**Server B steps down**:
+
+```
+[B] Primary node is back up and repsonding. STEPING DOWN FROM ACTIVE!
+```
+
+**Client goes back to requesting server A**:
+
+```
+read_all
+(answered by http://localhost:8001)
+{'count': 1, 'books': {'b14': {'author': 'JRR Tolkien', 'stock': 4}}}
 ```
 
 ## What this demonstrates
 
-- Quorum-gating and unconditional availability are mutually exclusive by definition
-- An AP system needs an explicit reconciliation strategy (last-write-wins, vector
-  clocks, CRDTs, read-repair) to converge after a partition heals — healing the
-  network alone doesn't fix it
+## What this demonstrates
+
+- Active-passive failover keeps the system available through a real failure — the client never has to know Server A died; it just keeps issuing reads/writes and gets served by whichever node is currently active.
+- The heartbeat is what makes failover possible in the first place: Server B only takes over because it _detects_ Server A's silence, not because anything tells it directly that A crashed.
+- Because both servers read/write through the same shared Database rather than holding their own local state, Server B can serve Server A's data immediately on takeover — there's no replication lag or missing-data window to work around here.
+- Failback isn't automatic just because Server A comes back online — Server B has to _notice_ A is alive again and voluntarily step down. Without that check, you'd end up with both servers thinking they're active at the same time (split-brain), which is exactly the kind of failure mode a real failover system has to guard against.
