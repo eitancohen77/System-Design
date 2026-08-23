@@ -1,6 +1,6 @@
 ---
 layout: default
-title: CAP Theorem
+title: Fail Over Pattern
 ---
 
 [← Back to all topics](../index.md)
