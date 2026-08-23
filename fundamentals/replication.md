@@ -1,13 +1,13 @@
 ---
 layout: default
-title: CAP Theorem
+title: Replication
 ---
 
 [← Back to all topics](../index.md)
 
 # Replication
 
-**Code:** [github.com/yourusername/cap-theorem-demo](#) _(replace with your real repo link)_
+**Code:** Demo not out yet
 
 A dependency-free simulation demonstrating replication with the theory behind it.
 
