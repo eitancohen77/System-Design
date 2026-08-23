@@ -9,8 +9,7 @@ title: CAP Theorem
 
 **Code:** [Failover Demonstration](https://github.com/eitancohen77/Availability-Failover)
 
-A dependency-free simulation demonstrating the CAP trade-off using two independent
-5-node clusters — one tuned for consistency (CP), one tuned for availability (AP).
+A dependency-free simulation demonstrating active-passive fail over with the theory behind it.
 
 ## Theory
 
