@@ -17,7 +17,7 @@ A dependency-free simulation demonstrating the CAP trade-off using two independe
 Availability of a distributed system is the percentage of time in a given period that a system is available to perform its task and function under normal conditions.  
 Because there are various nodes amongst various components in a distributed system, the system needs to remain operational despite failures within its components
 
-<u>**How resistant a system is to failure.**</u>  
+**<u>How resistant a system is to failure</u>**  
 An example of a system that has high availability would be Air Traffic Control, because a single error in directing aeroplanes can have catastrophic results.
 
 That being said, systems that are not vulnerable to failures can work well with fewer availability requirements. Higher availability comes at a cost.
@@ -43,7 +43,7 @@ This is also known as active-active because they’re all active
 
 Continuously monitor system health and regularly perform high-availability testing, so that we can take corrective action whenever one of the components in the system becomes unavailable.
 
-<u>**Heartbeat**</u> - active components periodically send a “ping” or status message to a central monitor. If a heartbeat stops for a set window, the window is declared dead.
+**<u>Heartbeat</u>** - active components periodically send a “ping” or status message to a central monitor. If a heartbeat stops for a set window, the window is declared dead.
 
 **Health Check Endpoints** - load balancer constantly poll nodes on GET/health.
 This verifies that the application server is running and returning a 200 OK
