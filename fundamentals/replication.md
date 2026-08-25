@@ -138,6 +138,81 @@ In partial replication only a partial amount of the data is given to the replica
 
 ![alt text](./images/Replication/full-vs-partial.png)
 
-## Watching it run
+## Code demonstratio
+
+### Master Slave Scalability
+
+the way this is set up is I have 3 servers.
+
+![alt text](./images/Replication/setup.png)
+
+1. **master_db** - The main master database wherer all writes are sent to
+2. **replica_db** - replica databases that are clones of the master db. Here we created 3 replica nodes.
+3. **server** - server that handles requests
+
+![alt text](./images/Replication/request-delay.png)
+
+- I've set up a delay to read/write operatios so the differences can be been as well as to imitate real life systems
+
+I also have a file that has 100 request. 90 read and 10 write. This is because system databases will be fired at hundreds-thousands of request per minute. Especially if there is a surge in user traffic and you demand scalability.
+
+```
+REQUESTS = [
+    {"type": "write", "user": "loadtest_4", "data": {"height": 5.5, "snowboard": "Ride Warpig", "favorite_mountain": "Park City", "skill": "beginner"}},
+    {"type": "read", "user": "casey"},
+    {"type": "read", "user": "morgan"},
+    {"type": "read", "user": "sam"},
+    {"type": "read", "user": "taylor"},
+    . . .
+]
+```
+
+We are going to compare a singular database with a master-slave database by firing the requests at both systems and the total sum time it takes to return each request:
+
+```
+--- Load test: 101 requests ---
+
+Single database (master only): 16.15s
+Master-slave (3 replicas): 4.99s
+Speedup: 3.24x
+```
+
+As we can see the master-salve system was able to compute requests at 3x the speed.
+
+### Master Master architecture
+
+With this set up I have 2 databases, one in new york and one in Tokyo
+
+![alt text](./images/Replication/master-master-setup.png)
+
+I also have requests from people in tokyo and in New York
+
+```
+REQUESTS = [
+    {"client_location": "new_york", "user": "avery"},
+    {"client_location": "tokyo", "user": "riley"},
+    {"client_location": "new_york", "user": "harper"},
+    {"client_location": "tokyo", "user": "harper"},
+    {"client_location": "tokyo", "user": "harper"},
+    {"client_location": "tokyo", "user": "casey"},
+    . . .
+    ]
+
+```
+
+If a user from Tokyo makes a request to New York database, he will get a delay
+
+![alt text](./images/Replication/geo-delay.png)
+
+- geo_delay delays the process by a set amount of time if the user is from a different location. This mimics a real life system in which if you have a user in tokyo trying to access a database in new york, it has to travel all the way through fiber cables and back before his request is returned.
+
+```
+--- Topology comparison: 18 client requests (9 Tokyo, 9 NY) ---
+Setup A - NY-only (master-slave):        7.49s
+Setup B - master-master (geo-routed):    2.97s
+Improvement: 2.52x faster with master-master
+```
+
+With master-master system, the speedup in
 
 ## What this demonstrates
