@@ -213,6 +213,8 @@ Setup B - master-master (geo-routed):    2.97s
 Improvement: 2.52x faster with master-master
 ```
 
-With master-master system, the speedup in
-
 ## What this demonstrates
+
+This setup proves the core argument for multi-leader replication: geography is a real cost, and a single leader can't escape it. In the master-slave system, every write and read — no matter where the client is physically located — has to travel to that one leader database. That's fine when your users are local, but it breaks down the moment your user base spans continents. A Tokyo user hitting a database in New York has to pay the round-trip cost of that distance on every single request, regardless of how fast the database itself responds.
+
+Master-master solves this by letting each region write and read from its own local leader. A Tokyo user talks to a Tokyo database; a New York user talks to a New York database. Neither one is waiting on a transoceanic round trip just to read a value. The tradeoff, as the notes above cover, is that you now have two sources of truth that can diverge — which is why this setup pairs master-master with asynchronous replication between the two leaders, reconciling their datasets on an interval rather than requiring every write to wait on a cross-region confirmation. The 2.52x speedup isn't just a number — it's the concrete cost of distance made visible, and it's exactly the tradeoff your original notes described: sacrificing perfect real-time consistency between NY and Tokyo in exchange for every user getting fast, local reads and writes
