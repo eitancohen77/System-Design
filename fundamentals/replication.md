@@ -7,7 +7,7 @@ title: Replication
 
 # Replication
 
-**Code:** Demo not out yet
+**Code:** [Code Demonstration](https://github.com/eitancohen77/Replication)
 
 A dependency-free simulation demonstrating replication with the theory behind it.
 
