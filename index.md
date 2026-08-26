@@ -17,6 +17,7 @@ Hands-on demos I built from scratch to prove out each concept.
 - [Availability](fundamentals/availability.md) — availability, rule of 9s, fault tolerance
 - [Failover](fundamentals/failover.md) — active-passive & active-active failover
 - [Replication](fundamentals/replication.md) — single vs. master-slave, full vs. partial replication
+- [DNS](fundamentals/dns.md) — Domain Name System: 4 DNS servers
 
 ## Case Studies
 
