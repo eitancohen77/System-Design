@@ -12,6 +12,7 @@ on how real systems (Kafka, Redis, etc.) apply — or break — these trade-offs
 
 Hands-on demos I built from scratch to prove out each concept.
 
+- [Networking Layers](fundamentals/networking-layers.md) — OSI Model, The 3 Important Layers
 - [CAP Theorem](fundamentals/cap-theorem.md) — consistency vs. availability during a network partition
 - [Consistency Patterns](fundamentals/consistency-systems.md) — strong vs eventual consistency
 - [Availability](fundamentals/availability.md) — availability, rule of 9s, fault tolerance
