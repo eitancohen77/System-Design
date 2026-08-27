@@ -9,9 +9,6 @@ title: Availability
 
 **Code:** No code for this project.
 
-A dependency-free simulation demonstrating the CAP trade-off using two independent
-5-node clusters — one tuned for consistency (CP), one tuned for availability (AP).
-
 ## Theory
 
 Availability of a distributed system is the percentage of time in a given period that a system is available to perform its task and function under normal conditions.  

@@ -9,6 +9,9 @@ title: CAP Theorem
 
 **Code:** [CAP Theorem Demonstration](https://github.com/eitancohen77/CAP-Theorem)
 
+A dependency-free simulation demonstrating the CAP trade-off using two independent
+5-node clusters — one tuned for consistency (CP), one tuned for availability (AP).
+
 ## Theory
 
 ### CAP THEOREM BY ERIC BREWER

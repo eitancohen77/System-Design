@@ -9,9 +9,6 @@ title: DNS
 
 **Code:** No code for this project.
 
-A dependency-free simulation demonstrating the CAP trade-off using two independent
-5-node clusters — one tuned for consistency (CP), one tuned for availability (AP).
-
 ## Theory
 
 ## Domain Name System
